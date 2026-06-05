@@ -1,6 +1,6 @@
 {
 	"name": "svelte-rune-form",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Lightweight, type-safe form library for Svelte 5 built with runes",
 	"license": "MIT",
 	"author": "Dominik Linduška",
@@ -18,22 +18,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"svelte": "./src/lib/index.ts",
-			"types": "./src/lib/index.ts",
-			"default": "./src/lib/index.ts"
+			"svelte": "./dist/index.js",
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
 		}
 	},
-	"svelte": "./src/lib/index.ts",
-	"types": "./src/lib/index.ts",
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"files": [
-		"src/lib"
+		"src/lib",
+		"dist"
 	],
 	"scripts": {
 		"test": "vitest",
 		"test:run": "vitest run",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"eslint": "eslint .",
-		"prettier": "prettier --check ."
+		"prettier": "prettier --check .",
+		"build": "svelte-package",
+		"prepublishOnly": "svelte-package"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"
@@ -41,8 +44,10 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^10.0.1",
+		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tsconfig/svelte": "^5.0.8",
+		"@types/node": "^25.9.1",
 		"@vitest/browser": "^4.1.8",
 		"@vitest/browser-playwright": "^4.1.8",
 		"eslint": "^10.4.1",

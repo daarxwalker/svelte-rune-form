@@ -4,6 +4,7 @@ import path from 'path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+	// @ts-expect-error version mismatch fallback
 	plugins: [svelte()],
 	resolve: {
 		alias: {
