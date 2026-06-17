@@ -1,6 +1,6 @@
 {
 	"name": "svelte-rune-form",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "Lightweight, type-safe form library for Svelte 5 built with runes",
 	"license": "MIT",
 	"author": "Dominik Linduška",
@@ -44,6 +44,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^10.0.1",
+		"@standard-schema/spec": "^1.1.0",
 		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tsconfig/svelte": "^5.0.8",

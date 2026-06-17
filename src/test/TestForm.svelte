@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as v from 'valibot'
-	import { valibot } from '$lib/validator'
 	import { createForm } from '$lib/create-form.svelte'
 
 	const schema = v.object({
@@ -19,7 +18,7 @@
 		onSubmit: async (values) => {
 			submitted = values
 		},
-		validator: valibot(schema)
+		validator: schema
 	})
 </script>
 

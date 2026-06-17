@@ -6,8 +6,8 @@ Lightweight, type-safe form library for Svelte 5 built with runes.
 
 - Built with Svelte 5 runes
 - Validates on blur or change — your choice
-- Works with any validation library via a simple validator interface
-- First-class [Valibot](https://valibot.dev) support out of the box
+- Works with any [Standard Schema](https://standardschema.dev) compliant library — Zod, Valibot, ArkType, and more
+- Also works with any custom validator via a simple validator interface
 - Async `onSubmit` with `isPending` state
 - Server-side error support via `setErrors`
 - TypeScript ready
@@ -18,10 +18,12 @@ Lightweight, type-safe form library for Svelte 5 built with runes.
 npm install svelte-rune-form
 ```
 
-Valibot is optional but recommended:
+Bring your own schema library — any [Standard Schema](https://standardschema.dev) compliant package works, for example:
 
 ```bash
 npm install valibot
+# or
+npm install zod
 ```
 
 ## Usage
@@ -29,7 +31,7 @@ npm install valibot
 ```svelte
 <script lang="ts">
     import * as v from 'valibot'
-    import { createForm, valibot } from 'svelte-rune-form'
+    import { createForm } from 'svelte-rune-form'
 
     const schema = v.object({
         email: v.pipe(v.string(), v.nonEmpty('Email is required'), v.email('Invalid email')),
@@ -38,7 +40,7 @@ npm install valibot
 
     const { form, errors, handleValidate, handleSubmit, isValid, isPending } = createForm({
         initialValues: { email: '', password: '' },
-        validator: valibot(schema),
+        validator: schema,
         onSubmit: async (values) => {
             await api.login(values)
         }
@@ -69,6 +71,22 @@ npm install valibot
 </form>
 ```
 
+Schema is passed directly — no adapter or wrapper needed. This works the same way with Zod, ArkType, or any other Standard Schema compliant library:
+
+```ts
+import * as z from 'zod'
+
+const schema = z.object({
+    email: z.string().min(1, 'Email is required').email('Invalid email')
+})
+
+createForm({
+    initialValues: { email: '' },
+    validator: schema,
+    onSubmit: async (values) => { ... }
+})
+```
+
 ## Validate on change
 
 Attach `handleValidate` to `onchange` instead of `onblur`:
@@ -88,7 +106,7 @@ Use `setErrors` to display errors returned from your API:
 <script lang="ts">
     const { form, errors, handleValidate, handleSubmit, setErrors } = createForm({
         initialValues: { email: '' },
-        validator: valibot(schema),
+        validator: schema,
         onSubmit: async (values) => {
             const res = await api.register(values)
             if (res.error) {
@@ -101,7 +119,7 @@ Use `setErrors` to display errors returned from your API:
 
 ## Custom validator
 
-You can use any validation library by providing your own validator function:
+If you don't want to use a schema library, provide your own validator function:
 
 ```ts
 import { createForm } from 'svelte-rune-form'
@@ -130,7 +148,7 @@ const { form, errors, handleValidate, handleSubmit } = createForm({
 <script lang="ts">
     const { form, errors, handleValidate, handleSubmit, reset } = createForm({
         initialValues: { email: '', password: '' },
-        validator: valibot(schema),
+        validator: schema,
         onSubmit: async (values) => {
             await api.login(values)
             reset()
@@ -162,7 +180,7 @@ const { form, errors, handleValidate, handleSubmit } = createForm({
 | Option | Type | Description |
 |---|---|---|
 | `initialValues` | `T` | Initial form values |
-| `validator` | `Validator<T>` | Validator function — use `valibot()` helper or provide your own |
+| `validator` | `Validator<T> \| StandardSchemaV1<T>` | A [Standard Schema](https://standardschema.dev) compliant schema (Zod, Valibot, ArkType, etc.) or a custom validator function |
 | `onSubmit` | `(values: T) => Promise<void> \| void` | Called with validated values on submit |
 
 #### Returns
@@ -178,19 +196,6 @@ const { form, errors, handleValidate, handleSubmit } = createForm({
 | `isPending()` | `() => boolean` | Returns true during async submit |
 | `setErrors(errors)` | `(errors: Partial<Record<keyof T, string>>) => void` | Set server-side errors |
 | `reset()` | `() => void` | Reset form to initial values |
-
-### `valibot(schema)`
-
-Helper that wraps a Valibot schema into a `Validator` function:
-
-```ts
-import * as v from 'valibot'
-import { valibot } from 'svelte-rune-form'
-
-const validator = valibot(v.object({
-    email: v.pipe(v.string(), v.email('Invalid email'))
-}))
-```
 
 ## Important note on reactivity
 

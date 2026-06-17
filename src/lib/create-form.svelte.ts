@@ -1,8 +1,9 @@
-import { type ValidationIssues, type Validator } from './validator'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
+import { isStandard, standard, type ValidationIssues, type Validator } from './validator'
 
 type CreateFormOptions<T extends Record<string, unknown>> = {
 	initialValues: T
-	validator: Validator<T>
+	validator: StandardSchemaV1<NoInfer<T>> | Validator<NoInfer<T>>
 	onSubmit: (values: T) => Promise<void> | void
 }
 
@@ -11,6 +12,7 @@ export function createForm<T extends Record<string, unknown>>({
 	onSubmit,
 	validator
 }: CreateFormOptions<T>) {
+	const validate = isStandard<T>(validator) ? standard(validator) : validator
 	const form = $state<T>({ ...initialValues })
 	let errors = $state<Partial<Record<keyof T, string>>>({})
 	let validated = $state<Partial<Record<keyof T, boolean>>>({})
@@ -18,7 +20,7 @@ export function createForm<T extends Record<string, unknown>>({
 
 	$effect(() => {
 		const snapshot = { ...form }
-		const issues = validator(snapshot)
+		const issues = validate(snapshot)
 
 		for (const key of Object.keys(snapshot)) {
 			const field = key as keyof T
@@ -40,7 +42,7 @@ export function createForm<T extends Record<string, unknown>>({
 			validated[key as keyof T] = true
 		}
 
-		const issues = validator({ ...form })
+		const issues = validate({ ...form })
 		const issueKeys = Object.keys(issues)
 
 		if (issueKeys.length > 0) {
