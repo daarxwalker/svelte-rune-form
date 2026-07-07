@@ -69,13 +69,16 @@ export function createForm<T extends Record<string, unknown>>({
 		validated = {}
 	}
 
-	function setValues(newValues: Partial<T>) {
+	function setValues(newValues: Partial<T>, options?: { validate?: boolean }) {
 		for (const key of Object.keys(newValues)) {
 			const field = key as keyof T
 			if (!(field in form)) {
 				continue
 			}
 			form[field] = newValues[field] as T[typeof field]
+			if (options?.validate) {
+				validated[field] = true
+			}
 		}
 	}
 

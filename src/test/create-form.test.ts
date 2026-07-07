@@ -138,10 +138,17 @@ describe('createForm', () => {
 	})
 
 	describe('setValues', () => {
-		it('updates form fields with new values', async () => {
+		it('updates form fields without triggering validation by default', async () => {
 			render(TestForm)
 			await page.getByTestId('set-values').click()
 			await expect.element(page.getByTestId('email')).toHaveValue('prefilled@test.com')
+			await expect.element(page.getByTestId('email-error')).not.toBeInTheDocument()
+		})
+
+		it('marks fields as validated when validate option is true', async () => {
+			render(TestForm)
+			await page.getByTestId('set-invalid-values').click()
+			await expect.element(page.getByTestId('email-error')).toHaveTextContent('Invalid email')
 		})
 
 		it('allows setting a field to a falsy value', async () => {

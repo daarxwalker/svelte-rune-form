@@ -47,6 +47,13 @@
 	>
 		Set values
 	</button>
+	<button
+		onclick={() => f.setValues({ email: 'not-an-email' }, { validate: true })}
+		data-testid="set-invalid-values"
+		type="button"
+	>
+		Set invalid values (validated)
+	</button>
 	<button onclick={() => f.setValues({ email: '' })} data-testid="set-empty-email" type="button">
 		Clear email
 	</button>
