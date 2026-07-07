@@ -9,6 +9,7 @@ Lightweight, type-safe form library for Svelte 5 built with runes.
 - Works with any [Standard Schema](https://standardschema.dev) compliant library — Zod, Valibot, ArkType, and more
 - Also works with any custom validator via a simple validator interface
 - Async `onSubmit` with `isPending` state
+- Bulk updates via `setValues`
 - Server-side error support via `setErrors`
 - TypeScript ready
 
@@ -96,6 +97,27 @@ Attach `handleValidate` to `onchange` instead of `onblur`:
     bind:value={form.email}
     onchange={() => handleValidate('email')}
 />
+```
+
+## Bulk updates
+
+Use `setValues` to update multiple fields at once from outside the form (e.g. prefilling with data from an API):
+
+```svelte
+<script lang="ts">
+	const { form, errors, handleValidate, handleSubmit, setValues } = createForm({
+		initialValues: { email: '', password: '' },
+		validator: schema,
+		onSubmit: async (values) => {
+			await api.register(values)
+		}
+	})
+
+	onMount(async () => {
+		const profile = await api.getProfile()
+		setValues({ email: profile.email })
+	})
+</script>
 ```
 
 ## Server-side errors
@@ -194,6 +216,7 @@ const { form, errors, handleValidate, handleSubmit } = createForm({
 | `isValid()` | `() => boolean` | Returns true when all validated fields pass |
 | `isDirty()` | `() => boolean` | Returns true when form differs from initial values |
 | `isPending()` | `() => boolean` | Returns true during async submit |
+| `setValues(newValues)` | `(newValues: Partial<T>) => void` | Set form values from a partial object |
 | `setErrors(errors)` | `(errors: Partial<Record<keyof T, string>>) => void` | Set server-side errors |
 | `reset()` | `() => void` | Reset form to initial values |
 
