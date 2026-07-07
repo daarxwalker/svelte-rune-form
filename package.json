@@ -1,6 +1,6 @@
 {
 	"name": "svelte-rune-form",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Lightweight, type-safe form library for Svelte 5 built with runes",
 	"license": "MIT",
 	"author": "Dominik Linduška",

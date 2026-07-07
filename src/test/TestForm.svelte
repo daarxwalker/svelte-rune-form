@@ -41,6 +41,16 @@
 	<button data-testid="submit" type="submit">Submit</button>
 	<button onclick={f.reset} data-testid="reset" type="button">Reset</button>
 	<button
+		onclick={() => f.setValues({ email: 'prefilled@test.com' })}
+		data-testid="set-values"
+		type="button"
+	>
+		Set values
+	</button>
+	<button onclick={() => f.setValues({ email: '' })} data-testid="set-empty-email" type="button">
+		Clear email
+	</button>
+	<button
 		onclick={() => f.setErrors({ email: 'Email already exists' })}
 		data-testid="set-server-error"
 		type="button"

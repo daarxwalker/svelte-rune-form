@@ -136,4 +136,19 @@ describe('createForm', () => {
 				.toHaveTextContent('Email already exists')
 		})
 	})
+
+	describe('setValues', () => {
+		it('updates form fields with new values', async () => {
+			render(TestForm)
+			await page.getByTestId('set-values').click()
+			await expect.element(page.getByTestId('email')).toHaveValue('prefilled@test.com')
+		})
+
+		it('allows setting a field to a falsy value', async () => {
+			render(TestForm)
+			await page.getByTestId('email').fill('test@test.com')
+			await page.getByTestId('set-empty-email').click()
+			await expect.element(page.getByTestId('email')).toHaveValue('')
+		})
+	})
 })

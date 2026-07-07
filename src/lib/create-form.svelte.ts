@@ -69,6 +69,16 @@ export function createForm<T extends Record<string, unknown>>({
 		validated = {}
 	}
 
+	function setValues(newValues: Partial<T>) {
+		for (const key of Object.keys(newValues)) {
+			const field = key as keyof T
+			if (!(field in form)) {
+				continue
+			}
+			form[field] = newValues[field] as T[typeof field]
+		}
+	}
+
 	function setErrors(newErrors: Partial<Record<keyof T, string>>) {
 		for (const key of Object.keys(newErrors)) {
 			const field = key as keyof T
@@ -91,6 +101,7 @@ export function createForm<T extends Record<string, unknown>>({
 		isPending: () => pending,
 		isValid: () => Object.keys(validated).length > 0 && Object.values(errors).every((e) => !e),
 		reset,
-		setErrors
+		setErrors,
+		setValues
 	}
 }
